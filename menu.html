@@ -110,19 +110,22 @@
 
   /* ITEM CARD */
   .item-card {
-    background: #fff;
-    border-radius: 14px;
-    border: 1px solid #e8dfc8;
-    overflow: hidden;
-    transition: transform 0.2s, box-shadow 0.2s;
-    display: flex;
-    flex-direction: column;
-    cursor: pointer;
-  }
-  .item-card:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 8px 28px rgba(26,18,8,0.13);
-  }
+  background: #fff;
+  border-radius: 14px;
+  border: 1px solid #e8dfc8;
+  overflow: hidden;
+  transition: transform 0.2s, box-shadow 0.2s;
+  display: flex;
+  flex-direction: column;
+  cursor: pointer;
+
+  /* ADD THIS 👇 */
+  position: relative;
+}
+.item-card:hover {
+  transform: translateY(-5px) scale(1.02);
+  box-shadow: 0 12px 30px rgba(26,18,8,0.18);
+}
   .item-img {
     width: 100%; height: 160px;
     object-fit: cover;
@@ -131,23 +134,31 @@
     color: var(--muted);
     font-size: 2.5rem;
   }
-  .item-img img { width: 100%; height: 100%; object-fit: cover; }
+  .item-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+.item-card:hover .item-img img {
+  transform: scale(1.05);
+}
   .item-body { padding: 1rem 1.1rem 1.25rem; flex: 1; display: flex; flex-direction: column; }
-  .item-name {
-    font-family: 'Playfair Display', serif;
-    font-size: 1.05rem;
-    font-weight: 600;
-    color: var(--dark);
-    margin-bottom: 0.3rem;
+.item-name {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--dark);
+  margin-bottom: 0.3rem;
   }
   .item-desc { font-size: 0.83rem; color: var(--muted); line-height: 1.5; flex: 1; margin-bottom: 0.75rem; }
   .item-footer { display: flex; align-items: center; justify-content: space-between; }
   .item-price {
-    font-family: 'Playfair Display', serif;
-    font-size: 1.1rem;
-    font-weight: 700;
-    color: var(--gold);
-  }
+  font-family: 'Playfair Display', serif;
+  font-size: 1.2rem;
+  font-weight: 800;
+  color: var(--gold);
+}
   .item-tags { display: flex; gap: 0.35rem; flex-wrap: wrap; }
 
   /* MODAL */
