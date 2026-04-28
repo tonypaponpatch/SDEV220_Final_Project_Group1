@@ -1,0 +1,142 @@
+{% extends "base.html" %}
+{% block title %}Dashboard — Thai Diner Admin{% endblock %}
+
+{% block extra_head %}
+<style>
+  .stats-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 1rem;
+    margin-bottom: 2rem;
+  }
+  .stat-card {
+    background: var(--dark);
+    border: 1px solid rgba(201,168,76,0.3);
+    border-radius: 12px;
+    padding: 1.25rem 1.5rem;
+    color: #fff;
+  }
+  .stat-val {
+    font-family: 'Playfair Display', serif;
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--gold);
+  }
+  .stat-label { font-size: 0.8rem; color: var(--warm); opacity: 0.7; text-transform: uppercase; letter-spacing: 0.07em; margin-top: 0.25rem; }
+
+  .admin-nav {
+    display: flex; flex-wrap: wrap; gap: 0.6rem;
+    margin-bottom: 2rem;
+  }
+  .admin-nav a {
+    padding: 0.45rem 1.1rem;
+    border-radius: var(--radius);
+    background: var(--warm);
+    color: var(--brown);
+    font-size: 0.85rem; font-weight: 500;
+    text-decoration: none;
+    border: 1px solid #d9cfc0;
+    transition: all 0.15s;
+  }
+  .admin-nav a:hover { background: var(--gold); color: var(--dark); border-color: var(--gold); }
+
+  .avail-dot {
+    width: 10px; height: 10px; border-radius: 50%;
+    display: inline-block; margin-right: 6px;
+  }
+  .avail-dot.on  { background: #28a745; }
+  .avail-dot.off { background: #dc3545; }
+
+  .action-form { display: inline; }
+</style>
+{% endblock %}
+
+{% block content %}
+<main>
+  <div class="page-header">
+    <h1 class="page-title">Admin <span>Dashboard</span></h1>
+    <a href="{{ url_for('admin_item_new') }}" class="btn btn-gold">+ Add Item</a>
+  </div>
+
+  <!-- STATS -->
+  <div class="stats-row">
+    <div class="stat-card">
+      <div class="stat-val">{{ items | length }}</div>
+      <div class="stat-label">Total Items</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-val">{{ items | selectattr('is_available') | list | length }}</div>
+      <div class="stat-label">Available</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-val">{{ categories | length }}</div>
+      <div class="stat-label">Categories</div>
+    </div>
+  </div>
+
+  <!-- QUICK LINKS -->
+  <div class="admin-nav">
+    <a href="{{ url_for('admin_addon_list') }}">Manage Add-Ons</a>
+    <a href="{{ url_for('admin_spicy_list') }}">Spicy Levels</a>
+    <a href="{{ url_for('admin_meat_list') }}">Meat Options</a>
+    <a href="{{ url_for('admin_qr') }}">QR Codes</a>
+  </div>
+
+  <!-- ITEMS TABLE -->
+  <div class="card">
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Category</th>
+            <th>Price</th>
+            <th>Status</th>
+            <th>Tags</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for item in items %}
+          <tr>
+            <td>
+              <strong>{{ item.name }}</strong>
+              {% if item.has_spicy_option %}<span class="badge badge-spicy" style="margin-left:6px">🌶 spicy</span>{% endif %}
+            </td>
+            <td><span class="badge badge-gray">{{ item.category.name | title }}</span></td>
+            <td>${{ "%.2f" | format(item.price) }}</td>
+            <td>
+              <span class="avail-dot {{ 'on' if item.is_available else 'off' }}"></span>
+              {{ 'Available' if item.is_available else 'Hidden' }}
+            </td>
+            <td>
+              {% for tag in item.tags %}
+                <span class="badge badge-gold">{{ tag.label | replace('_',' ') }}</span>
+              {% endfor %}
+            </td>
+            <td style="white-space:nowrap">
+              <a href="{{ url_for('admin_item_edit', item_id=item.id) }}" class="btn btn-outline btn-sm">Edit</a>
+              <form class="action-form" method="POST" action="{{ url_for('admin_item_toggle', item_id=item.id) }}">
+                <button class="btn btn-sm {{ 'btn-danger' if item.is_available else 'btn-gold' }}" type="submit">
+                  {{ 'Hide' if item.is_available else 'Show' }}
+                </button>
+              </form>
+              <form class="action-form" method="POST" action="{{ url_for('admin_item_delete', item_id=item.id) }}"
+                    onsubmit="return confirm('Delete {{ item.name }}?')">
+                <button class="btn btn-danger btn-sm" type="submit">Delete</button>
+              </form>
+            </td>
+          </tr>
+          {% else %}
+          <tr>
+            <td colspan="6" style="text-align:center;color:var(--muted);padding:2rem">
+              No menu items yet. <a href="{{ url_for('admin_item_new') }}">Add one!</a>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</main>
+{% endblock %}

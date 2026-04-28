@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block title %}{{ 'Edit' if meat else 'New' }} Meat Option — Thai Diner Admin{% endblock %}
+{% block content %}
+<main>
+  <div class="page-header">
+    <h1 class="page-title">{{ 'Edit' if meat else 'New' }} <span>Meat Option</span></h1>
+    <a href="{{ url_for('admin_meat_list') }}" class="btn btn-outline">← Back</a>
+  </div>
+  <div class="card" style="max-width:420px">
+    <form method="POST">
+      <div class="form-group">
+        <label>Name *</label>
+        <input type="text" name="name" class="form-control"
+               value="{{ meat.name if meat else '' }}" required placeholder="e.g. Chicken">
+      </div>
+      <div class="form-group">
+        <label>Extra Price ($)</label>
+        <input type="number" name="extra_price" class="form-control" step="0.01" min="0"
+               value="{{ meat.extra_price if meat else '0' }}" placeholder="0.00">
+      </div>
+      <div class="form-group">
+        <label style="display:flex;align-items:center;gap:0.5rem;cursor:pointer">
+          <input type="checkbox" name="is_default"
+                 {{ 'checked' if meat and meat.is_default else '' }}>
+          Set as default
+        </label>
+      </div>
+      <div style="display:flex;gap:0.75rem">
+        <button type="submit" class="btn btn-gold">{{ 'Save' if meat else 'Add' }}</button>
+        <a href="{{ url_for('admin_meat_list') }}" class="btn btn-outline">Cancel</a>
+      </div>
+    </form>
+  </div>
+</main>
+{% endblock %}
