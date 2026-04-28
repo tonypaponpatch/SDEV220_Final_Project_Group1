@@ -1,0 +1,173 @@
+================================================================
+  THAI DINER — Project Workflow Guide
+  SDEV220 Team
+================================================================
+
+----------------------------------------------------------------
+1. FIRST-TIME SETUP
+----------------------------------------------------------------
+
+Step 1 — Install dependencies
+  pip install flask flask-sqlalchemy flask-login werkzeug qrcode
+
+Step 2 — Initialize the database
+  flask --app app init-db
+
+  This creates the SQLite DB and seeds default data:
+  - Categories (appetizer, main, drink, dessert)
+  - Tags (gluten_free, vegetarian, spicy, popular)
+  - Meat options (Chicken, Pork, Beef, Shrimp, Tofu)
+  - Spicy levels (No Spice, Mild, Medium, Hot, Extra Hot)
+  - Add-ons (Extra Egg, Extra Tofu, Extra Shrimp, Extra Rice, Extra Sauce)
+  - Admin account (username: admin / password: admin1234)
+
+Step 3 — Run the server
+  flask --app app run --debug
+
+  Site is now live at: http://127.0.0.1:5000
+
+
+----------------------------------------------------------------
+2. PROJECT FILE STRUCTURE
+----------------------------------------------------------------
+
+  thai_diner/
+  ├── app.py                  Flask routes and app setup
+  ├── models.py               SQLAlchemy database models
+  ├── templates/              All HTML files go here
+  │   ├── base.html           Shared layout (navbar, styles)
+  │   ├── menu.html           Customer-facing menu page
+  │   └── admin/
+  │       ├── login.html      Admin sign-in page
+  │       ├── dashboard.html  Manage all menu items
+  │       ├── item_form.html  Add / edit a menu item
+  │       ├── qr.html         Generate & download QR codes
+  │       ├── addon_list.html
+  │       ├── addon_form.html
+  │       ├── spicy_list.html
+  │       ├── spicy_form.html
+  │       ├── meat_list.html
+  │       └── meat_form.html
+  └── static/
+      └── img/                Place food photos here (optional)
+
+
+----------------------------------------------------------------
+3. ADDING MENU ITEMS (Admin Panel)
+----------------------------------------------------------------
+
+  1. Go to:   http://127.0.0.1:5000/admin/login
+     Login:   username: admin  |  password: admin1234
+
+  2. Click "+ Add Item" on the dashboard
+
+  3. Fill in the form:
+     - Name and description
+     - Price
+     - Category (appetizer / main / drink / dessert)
+     - Tags (gluten_free, vegetarian, spicy, popular)
+     - Meat options available for this dish
+     - Add-ons available for this dish
+     - Check "Show spicy level picker" if the dish is spicy
+
+  4. Click Add Item — it appears on /menu immediately
+
+
+----------------------------------------------------------------
+4. CUSTOMER FLOW
+----------------------------------------------------------------
+
+  [Scan QR] --> [/menu loads] --> [Browse & Filter] --> [Tap dish]
+      --> [Choose meat / spice / add-ons] --> [Add to Cart]
+
+  - Customers scan the table QR code (generated in Admin > QR Codes)
+  - The menu page supports dietary filters (Vegetarian, Gluten-Free)
+  - Each dish card opens a modal with customization options
+  - Cart is tracked in the browser (client-side JavaScript)
+
+
+----------------------------------------------------------------
+5. URL REFERENCE
+----------------------------------------------------------------
+
+  CUSTOMER
+    /                           Redirects to /menu
+    /menu                       Main menu page
+    /menu?table=N               Menu with table number shown
+    /menu?filter=vegetarian     Filtered menu view
+
+  API (JSON)
+    /api/menu                   All available menu items + options
+    /api/spicy-levels           Global spicy level list
+
+  ADMIN
+    /admin/login                Sign-in page
+    /admin                      Dashboard — manage all items
+    /admin/items/new            Add a new menu item
+    /admin/items/<id>/edit      Edit an existing item
+    /admin/items/<id>/delete    Delete an item (POST)
+    /admin/items/<id>/toggle    Toggle available / hidden (POST)
+    /admin/addons               Manage add-on options
+    /admin/addons/new           Add a new add-on
+    /admin/spicy                Manage spicy levels
+    /admin/spicy/new            Add a spicy level
+    /admin/meat                 Manage meat options
+    /admin/meat/new             Add a meat option
+    /admin/qr                   Generate & download QR codes
+
+
+----------------------------------------------------------------
+6. HOW HTML INTEGRATES WITH FLASK
+----------------------------------------------------------------
+
+  All HTML files live in the templates/ folder.
+  Flask finds them automatically via render_template().
+
+  Example — in app.py:
+    @app.route('/menu')
+    def menu():
+        items = MenuItem.query.all()
+        return render_template("menu.html", items=items)
+
+  Inside your HTML, use Jinja2 syntax:
+    {{ variable }}              Display a value
+    {{ item.name }}             Display item name
+    {% for item in items %}     Loop through a list
+    {% endfor %}
+    {% extends "base.html" %}   Inherit shared layout
+    {% block content %}         Your unique page content
+    {% endblock %}
+
+  Rule: filename in render_template("x.html") must match
+        the file in templates/. That's the only connection needed.
+
+
+----------------------------------------------------------------
+7. TIPS & NOTES
+----------------------------------------------------------------
+
+  No images yet?
+    Menu cards show a placeholder automatically.
+    To add images later:
+      - Place image files in static/img/
+      - Set the filename in the item edit form (e.g. padthai.jpg)
+
+  Change admin password
+    Use the Admin Panel after first login.
+    Default password "admin1234" should be changed before demo.
+
+  QR Codes
+    Go to /admin/qr -> enter table number -> Generate -> download PNG.
+    Each QR links to /menu?table=N so staff can identify the table.
+
+  Debug mode
+    Use --debug during development only.
+    Remove it when deploying or presenting to class.
+
+  Database file
+    SQLite DB is saved as instance/thai_diner.db
+    To reset everything: delete that file and run init-db again.
+
+================================================================
+  Thai Diner — SDEV220
+================================================================

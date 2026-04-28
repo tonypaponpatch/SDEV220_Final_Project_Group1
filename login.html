@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+{% block title %}Admin Login — Thai Diner{% endblock %}
+
+{% block extra_head %}
+<style>
+  body { background: var(--dark); }
+  .login-wrap {
+    min-height: calc(100vh - 64px);
+    display: flex; align-items: center; justify-content: center;
+    padding: 2rem;
+  }
+  .login-card {
+    background: #fff;
+    border-radius: 18px;
+    padding: 2.5rem 2.25rem;
+    width: 100%; max-width: 400px;
+    border: 1px solid #e8dfc8;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.35);
+  }
+  .login-logo {
+    text-align: center;
+    margin-bottom: 2rem;
+  }
+  .login-logo h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 2rem;
+    color: var(--dark);
+    letter-spacing: 0.04em;
+  }
+  .login-logo h2 span { color: var(--gold); }
+  .login-logo p { color: var(--muted); font-size: 0.85rem; margin-top: 0.25rem; }
+  .login-divider {
+    width: 40px; height: 2px;
+    background: var(--gold);
+    margin: 1rem auto;
+  }
+  .login-btn {
+    width: 100%; padding: 0.8rem;
+    background: var(--dark); color: var(--gold);
+    border: 2px solid var(--gold);
+    border-radius: var(--radius);
+    font-family: 'Playfair Display', serif;
+    font-size: 1rem; font-weight: 700;
+    letter-spacing: 0.06em;
+    cursor: pointer; transition: all 0.2s;
+    margin-top: 0.5rem;
+  }
+  .login-btn:hover { background: var(--gold); color: var(--dark); }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="login-wrap">
+  <div class="login-card">
+    <div class="login-logo">
+      <h2>Thai<span>Diner</span></h2>
+      <div class="login-divider"></div>
+      <p>Admin Portal</p>
+    </div>
+    <form method="POST">
+      <div class="form-group">
+        <label for="username">Username</label>
+        <input type="text" id="username" name="username" class="form-control"
+               placeholder="Enter username" required autofocus>
+      </div>
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" class="form-control"
+               placeholder="Enter password" required>
+      </div>
+      <button type="submit" class="login-btn">Sign In</button>
+    </form>
+  </div>
+</div>
+{% endblock %}

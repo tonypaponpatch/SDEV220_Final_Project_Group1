@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block title %}Contact & Location — Thai Diner{% endblock %}
+
+{% block content %}
+<main style="max-width: 1100px; margin: 0 auto; padding: 0 1.5rem;">
+  <div class="page-header" style="text-align: center; margin-bottom: 2rem; padding-top: 1rem;">
+    <h1 class="page-title" style="display: inline-block;">Contact <span>& Location</span></h1>
+  </div>
+
+  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; justify-content: center; align-items: start;">
+    
+    <div class="card" style="border-top: 4px solid var(--gold); margin: 0 auto; width: 100%; max-width: 450px;">
+      <h2 style="font-family: 'Playfair Display'; margin-bottom: 1.5rem; color: var(--dark);">Visit Us</h2>
+      <div style="margin-bottom: 1.2rem;">
+        <p style="font-weight: 600; font-size: 0.85rem; text-transform: uppercase; color: var(--muted); letter-spacing: 0.05em;">Address</p>
+        <p style="margin-top: 0.3rem;">5129 Illinois Rd, Fort Wayne, IN 46804</p>
+      </div>
+      <div style="margin-bottom: 1.2rem;">
+        <p style="font-weight: 600; font-size: 0.85rem; text-transform: uppercase; color: var(--muted); letter-spacing: 0.05em;">Phone</p>
+        <p style="margin-top: 0.3rem;">(260) 434-9199</p>
+      </div>
+      <div style="margin-bottom: 1.5rem;">
+        <p style="font-weight: 600; font-size: 0.85rem; text-transform: uppercase; color: var(--muted); letter-spacing: 0.05em;">Social Media</p>
+        <a href="https://www.facebook.com/thaidinerfortwayne/" target="_blank" class="btn btn-dark btn-sm" style="margin-top: 0.5rem;">
+          Connect on Facebook
+        </a>
+      </div>
+      <hr style="border: 0; border-top: 1px solid #ede5d4; margin-bottom: 1.5rem;">
+      <h2 style="font-family: 'Playfair Display'; margin-bottom: 1rem; color: var(--dark);">As Seen on TV</h2>
+      <div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 8px;">
+        <iframe src="https://www.youtube.com/embed/ZwREn97R8UM" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0;" allowfullscreen></iframe>
+      </div>
+    </div>
+
+    <div class="card" style="padding: 0; overflow: hidden; border: 1px solid #e8dfc8; margin: 0 auto; width: 100%; max-width: 450px;">
+      <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3009.682!2d-85.209!3d41.031!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8815e6b9a8969447%3A0xf639890538965645!2s5129%20Illinois%20Rd%2C%20Fort%20Wayne%2C%20IN%2046804!5e0!3m2!1sen!2sus!4v1714260000000!5m2!1sen!2sus" 
+              width="100%" height="650" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+    </div>
+    
+  </div>
+</main>
+{% endblock %}
