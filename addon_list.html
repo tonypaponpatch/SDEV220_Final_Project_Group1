@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block title %}Add-Ons — Thai Diner Admin{% endblock %}
+{% block content %}
+<main>
+  <div class="page-header">
+    <h1 class="page-title">Add-<span>Ons</span></h1>
+    <div style="display:flex;gap:0.75rem">
+      <a href="{{ url_for('admin_addon_new') }}" class="btn btn-gold">+ New Add-On</a>
+      <a href="{{ url_for('admin_dashboard') }}" class="btn btn-outline">← Dashboard</a>
+    </div>
+  </div>
+  <div class="card">
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Name</th><th>Price</th><th>Actions</th></tr></thead>
+        <tbody>
+          {% for a in add_ons %}
+          <tr>
+            <td>{{ a.name }}</td>
+            <td>${{ "%.2f" | format(a.price) }}</td>
+            <td>
+              <a href="{{ url_for('admin_addon_edit', addon_id=a.id) }}" class="btn btn-outline btn-sm">Edit</a>
+              <form style="display:inline" method="POST" action="{{ url_for('admin_addon_delete', addon_id=a.id) }}"
+                    onsubmit="return confirm('Delete {{ a.name }}?')">
+                <button class="btn btn-danger btn-sm">Delete</button>
+              </form>
+            </td>
+          </tr>
+          {% else %}
+          <tr><td colspan="3" style="text-align:center;color:var(--muted);padding:2rem">No add-ons yet.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</main>
+{% endblock %}
