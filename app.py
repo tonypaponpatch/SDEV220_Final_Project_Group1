@@ -531,15 +531,14 @@ def init_db_command():
         # Default meat options (Chicken pre-selected as default)
         db.session.add_all([
             MeatOption(name='Chicken', extra_price=0.0,  is_default=True),
-            MeatOption(name='Pork',    extra_price=0.0,  is_default=False),
-            MeatOption(name='Beef',    extra_price=20.0, is_default=False),
-            MeatOption(name='Shrimp',  extra_price=30.0, is_default=False),
-            MeatOption(name='Tofu',    extra_price=0.0,  is_default=False),
+            MeatOption(name='Pork',    extra_price=2.50, is_default=False),
+            MeatOption(name='Beef',    extra_price=3.0,  is_default=False),
+            MeatOption(name='Shrimp',  extra_price=4.0,  is_default=False),
+            MeatOption(name='Tofu',    extra_price=2.50, is_default=False),
         ])
 
         # Default spicy levels (Medium pre-selected as default)
         db.session.add_all([
-            SpicyLevel(label='No Spice',  level=0, is_default=False),
             SpicyLevel(label='Mild',      level=1, is_default=False),
             SpicyLevel(label='Medium',    level=2, is_default=True),
             SpicyLevel(label='Hot',       level=3, is_default=False),
@@ -548,11 +547,11 @@ def init_db_command():
 
         # Default add-ons
         db.session.add_all([
-            AddOn(name='Extra Egg',    price=15.0),
-            AddOn(name='Extra Tofu',   price=20.0),
-            AddOn(name='Extra Shrimp', price=40.0),
-            AddOn(name='Extra Rice',   price=10.0),
-            AddOn(name='Extra Sauce',  price=5.0),
+            AddOn(name='Extra Egg',    price=3.0),
+            AddOn(name='Extra Tofu',   price=2.50),
+            AddOn(name='Extra Shrimp', price=4.0),
+            AddOn(name='Extra Rice',   price=2.0),
+            AddOn(name='Extra Sauce',  price=1.0),
         ])
 
         admin = Admin(username='admin')

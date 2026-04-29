@@ -89,7 +89,7 @@
                      {{ 'checked' if item and m in item.meat_options else '' }}
                      style="display:none"
                      onchange="this.closest('label').style.background=this.checked?'var(--gold)':'#fff'">
-              {{ m.name }}{% if m.extra_price > 0 %} +${{ "%.0f"|format(m.extra_price) }}{% endif %}
+              {{ m.name }}{% if m.extra_price > 0 %} +${{ "%.2f" | format(m.extra_price) }}{% endif %}
             </label>
           {% endfor %}
         </div>
@@ -107,7 +107,7 @@
                      {{ 'checked' if item and a in item.add_ons else '' }}
                      style="display:none"
                      onchange="this.closest('label').style.background=this.checked?'var(--dark)':'#fff';this.closest('label').style.color=this.checked?'var(--gold)':'inherit'">
-              {{ a.name }} +${{ "%.0f"|format(a.price) }}
+              {{ a.name }} +${{ "%.2f" | format(a.price) }}
             </label>
           {% endfor %}
         </div>

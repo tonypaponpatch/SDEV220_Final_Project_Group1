@@ -58,6 +58,21 @@
     }
     .nav-links a:hover { opacity: 1; color: var(--gold); }
 
+    @media (max-width: 600px) {
+      nav {
+        padding: 0 1rem; 
+      }
+      .nav-brand {
+        font-size: 1.2rem; 
+      }
+      .nav-links {
+        gap: 0.8rem; 
+      }
+      .nav-links a {
+        font-size: 0.7rem; 
+      }
+    }
+
     /* FLASH MESSAGES */
     .flash-wrap { padding: 0.75rem 2rem; }
     .flash {
@@ -184,6 +199,7 @@
     <a href="{{ url_for('menu') }}" class="nav-brand">Thai<span>Diner</span></a>
     <div class="nav-links">
       <a href="{{ url_for('menu') }}">Menu</a>
+      <a href="{{ url_for('contact') }}">Contact</a>
       {% if current_user.is_authenticated %}
         <a href="{{ url_for('admin_dashboard') }}">Dashboard</a>
         <a href="{{ url_for('admin_logout') }}">Logout</a>
@@ -206,7 +222,12 @@
   {% block content %}{% endblock %}
 
   <footer>
-    &copy; {{ 2025 }} Thai Diner &mdash; Authentic Thai Cuisine
-  </footer>
+  <div style="margin-bottom: 1rem;">
+    <a href="https://www.facebook.com/AuthenticThaiStyle/" target="_blank" style="color: var(--gold); text-decoration: none; font-weight: 500;">
+      Connect on Facebook
+    </a>
+  </div>
+  &copy; 2026 Thai Diner &mdash; Authentic Thai Cuisine
+</footer>
 </body>
 </html>

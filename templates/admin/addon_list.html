@@ -17,7 +17,7 @@
           {% for a in add_ons %}
           <tr>
             <td>{{ a.name }}</td>
-            <td>${{ "%.0f"|format(a.price) }}</td>
+            <td>${{ "%.2f" | format(a.price) }}</td>
             <td>
               <a href="{{ url_for('admin_addon_edit', addon_id=a.id) }}" class="btn btn-outline btn-sm">Edit</a>
               <form style="display:inline" method="POST" action="{{ url_for('admin_addon_delete', addon_id=a.id) }}"

@@ -104,7 +104,7 @@
               {% if item.has_spicy_option %}<span class="badge badge-spicy" style="margin-left:6px">🌶 spicy</span>{% endif %}
             </td>
             <td><span class="badge badge-gray">{{ item.category.name | title }}</span></td>
-            <td>฿{{ "%.0f" | format(item.price) }}</td>
+            <td>${{ "%.2f" | format(item.price) }}</td>
             <td>
               <span class="avail-dot {{ 'on' if item.is_available else 'off' }}"></span>
               {{ 'Available' if item.is_available else 'Hidden' }}

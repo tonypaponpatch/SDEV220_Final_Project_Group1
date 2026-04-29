@@ -148,7 +148,7 @@ class MeatOption(db.Model):
         }
 
     def __repr__(self):
-        return f'<MeatOption {self.name} +฿{self.extra_price}>'
+        return f'<MeatOption {self.name} +${self.extra_price}>'
 
 
 # ============================================================
@@ -201,7 +201,7 @@ class AddOn(db.Model):
         }
 
     def __repr__(self):
-        return f'<AddOn {self.name} ฿{self.price}>'
+        return f'<AddOn {self.name} ${self.price}>'
 
 
 # ============================================================
@@ -275,4 +275,4 @@ class MenuItem(db.Model):
         }
 
     def __repr__(self):
-        return f'<MenuItem {self.name} ฿{self.price}>'
+        return f'<MenuItem {self.name} ${self.price}>'
