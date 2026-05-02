@@ -1,0 +1,176 @@
+{% extends "base.html" %}
+{% block title %}{{ 'Edit' if item else 'New' }} Item — Thai Diner Admin{% endblock %}
+
+{% block content %}
+<main>
+  <div class="page-header">
+    <h1 class="page-title">{{ 'Edit' if item else 'New' }} <span>Menu Item</span></h1>
+    <a href="{{ url_for('admin_dashboard') }}" class="btn btn-outline">← Back</a>
+  </div>
+
+  <div class="card" style="max-width:700px">
+    <form method="POST" enctype="multipart/form-data">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem">
+        <div class="form-group" style="grid-column:1/-1">
+          <label>Item Name *</label>
+          <input type="text" name="name" class="form-control"
+                 value="{{ item.name if item else '' }}" required placeholder="e.g. Pad Thai">
+        </div>
+
+        <div class="form-group" style="grid-column:1/-1">
+          <label>Description</label>
+          <textarea name="description" class="form-control"
+                    placeholder="Short description of the dish">{{ item.description if item else '' }}</textarea>
+        </div>
+
+        <div class="form-group">
+          <label>Price ($) *</label>
+          <input type="number" name="price" class="form-control" step="0.01" min="0"
+                 value="{{ item.price if item else '' }}" required placeholder="0.00">
+        </div>
+
+        <div class="form-group">
+          <label>Category *</label>
+          <select name="category_id" class="form-control" required>
+            {% for cat in categories %}
+              <option value="{{ cat.id }}"
+                {% if item and item.category_id == cat.id %}selected{% endif %}>
+                {{ cat.name | title }}
+              </option>
+            {% endfor %}
+          </select>
+        </div>
+
+        <div class="form-group" style="grid-column:1/-1">
+          <label>Item Image</label>
+
+          {% if item and item.image_url %}
+          <div id="currentImgWrap" style="margin-bottom:0.75rem;display:flex;align-items:center;gap:1rem">
+            <img id="imgPreview" src="{{ url_for('static', filename='img/' ~ item.image_url) }}"
+                 style="width:80px;height:80px;object-fit:cover;border-radius:8px;border:1.5px solid #d9cfc0">
+            <div>
+              <p style="font-size:0.8rem;color:var(--muted);margin-bottom:0.4rem">{{ item.image_url }}</p>
+              <button type="button" class="btn btn-danger btn-sm" onclick="deleteImage()">🗑 Delete Image</button>
+            </div>
+          </div>
+          {% else %}
+          <div id="currentImgWrap" style="margin-bottom:0.75rem;display:none;align-items:center;gap:1rem">
+            <img id="imgPreview" style="width:80px;height:80px;object-fit:cover;border-radius:8px;border:1.5px solid #d9cfc0">
+          </div>
+          {% endif %}
+
+          <input type="hidden" name="image_url" id="imageUrlHidden"
+                 value="{{ item.image_url if item else '' }}">
+          <input type="hidden" name="delete_image" id="deleteImageFlag" value="0">
+
+          <label class="btn btn-outline" style="cursor:pointer;display:inline-block">
+            📁 Choose Image
+            <input type="file" name="image_file" id="imageFile" accept="image/*"
+                   style="display:none" onchange="previewImage(this)">
+          </label>
+          <span id="fileNameLabel" style="margin-left:0.75rem;font-size:0.85rem;color:var(--muted)">
+            {{ item.image_url if item and item.image_url else 'No file chosen' }}
+          </span>
+        </div>
+      </div>
+
+      <!-- CHECKBOXES -->
+      <div style="display:flex;gap:2rem;margin-bottom:1.5rem">
+        <label style="display:flex;align-items:center;gap:0.5rem;font-size:0.9rem;cursor:pointer">
+          <input type="checkbox" name="has_spicy_option"
+                 {{ 'checked' if item and item.has_spicy_option else '' }}>
+          Show spicy level picker
+        </label>
+      </div>
+
+      <!-- TAGS -->
+      <div class="form-group">
+        <label>Tags</label>
+        <div style="display:flex;flex-wrap:wrap;gap:0.6rem">
+          {% for tag in tags %}
+            <label style="display:flex;align-items:center;gap:0.4rem;font-size:0.85rem;cursor:pointer;
+                          padding:0.35rem 0.8rem;border:1.5px solid #d9cfc0;border-radius:999px;
+                          background:{% if item and tag in item.tags %}var(--gold){% else %}#fff{% endif %}">
+              <input type="checkbox" name="tag_ids" value="{{ tag.id }}"
+                     {{ 'checked' if item and tag in item.tags else '' }}
+                     style="display:none"
+                     onchange="this.closest('label').style.background=this.checked?'var(--gold)':'#fff'">
+              {{ tag.label | replace('_',' ') | title }}
+              <span class="badge badge-gray" style="font-size:0.65rem">{{ tag.tag_type }}</span>
+            </label>
+          {% endfor %}
+        </div>
+      </div>
+
+      <!-- MEAT OPTIONS -->
+      <div class="form-group">
+        <label>Available Meat Options</label>
+        <div style="display:flex;flex-wrap:wrap;gap:0.6rem">
+          {% for m in meat_options %}
+            <label style="display:flex;align-items:center;gap:0.4rem;font-size:0.85rem;cursor:pointer;
+                          padding:0.35rem 0.8rem;border:1.5px solid #d9cfc0;border-radius:999px;
+                          background:{% if item and m in item.meat_options %}var(--gold){% else %}#fff{% endif %}">
+              <input type="checkbox" name="meat_ids" value="{{ m.id }}"
+                     {{ 'checked' if item and m in item.meat_options else '' }}
+                     style="display:none"
+                     onchange="this.closest('label').style.background=this.checked?'var(--gold)':'#fff'">
+              {{ m.name }}{% if m.extra_price > 0 %} +${{ "%.2f" | format(m.extra_price) }}{% endif %}
+            </label>
+          {% endfor %}
+        </div>
+      </div>
+
+      <!-- ADD-ONS -->
+      <div class="form-group">
+        <label>Available Add-Ons</label>
+        <div style="display:flex;flex-wrap:wrap;gap:0.6rem">
+          {% for a in add_ons %}
+            <label style="display:flex;align-items:center;gap:0.4rem;font-size:0.85rem;cursor:pointer;
+                          padding:0.35rem 0.8rem;border:1.5px solid #d9cfc0;border-radius:var(--radius);
+                          background:{% if item and a in item.add_ons %}var(--dark);color:var(--gold){% else %}#fff{% endif %}">
+              <input type="checkbox" name="addon_ids" value="{{ a.id }}"
+                     {{ 'checked' if item and a in item.add_ons else '' }}
+                     style="display:none"
+                     onchange="this.closest('label').style.background=this.checked?'var(--dark)':'#fff';this.closest('label').style.color=this.checked?'var(--gold)':'inherit'">
+              {{ a.name }} +${{ "%.2f" | format(a.price) }}
+            </label>
+          {% endfor %}
+        </div>
+      </div>
+
+      <div style="display:flex;gap:0.75rem;margin-top:0.5rem">
+        <button type="submit" class="btn btn-gold">
+          {{ 'Save Changes' if item else 'Add Item' }}
+        </button>
+        <a href="{{ url_for('admin_dashboard') }}" class="btn btn-outline">Cancel</a>
+      </div>
+    </form>
+  </div>
+</main>
+
+<script>
+  function previewImage(input) {
+    if (!input.files || !input.files[0]) return;
+    const file = input.files[0];
+    const reader = new FileReader();
+    reader.onload = e => {
+      const wrap = document.getElementById('currentImgWrap');
+      const preview = document.getElementById('imgPreview');
+      preview.src = e.target.result;
+      wrap.style.display = 'flex';
+    };
+    reader.readAsDataURL(file);
+    document.getElementById('fileNameLabel').textContent = file.name;
+    document.getElementById('deleteImageFlag').value = '0';
+  }
+
+  function deleteImage() {
+    if (!confirm('Delete this image?')) return;
+    document.getElementById('deleteImageFlag').value = '1';
+    document.getElementById('imageUrlHidden').value = '';
+    document.getElementById('currentImgWrap').style.display = 'none';
+    document.getElementById('fileNameLabel').textContent = 'No file chosen';
+    document.getElementById('imageFile').value = '';
+  }
+</script>
+{% endblock %}
